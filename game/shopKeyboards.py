@@ -3,7 +3,7 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 # shop car select
 shopMarkSeletIk = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton("LADA (ВАЗ)", callback_data="shopMarkSelectedLADA")]
+    [InlineKeyboardButton("ЭКОНОМ КЛАСС", callback_data="shopMarkSelectedEconom")]
 ])
 
 async def buyCarKeyboard(carName):

@@ -70,16 +70,17 @@ async def confirmRegisterCallback(callback: types.CallbackQuery):
 # shop
 @dp.callback_query_handler(Text(startswith="shopMarkSelected"))
 async def selectCarCallback(callback: types.CallbackQuery):
-    if callback.data == "shopMarkSelectedLADA":
-        await callback.message.answer("Вот все варианты автомобилей LADA на даный момент")
-        await selectCar(bot, callback.from_user, "LADA")
+    if callback.data == "shopMarkSelectedEconom":
+        await callback.message.answer("Вот все варианты автомобилей эконом класса на даный момент")
+        await selectCar(bot, callback.from_user)
+        await callback.answer("Вы выбрали автомобили эконом класса")
 
 @dp.callback_query_handler(Text(startswith="buyCar"))
 async def buyCarCallback(callback: types.CallbackQuery):
     if callback.data.startswith("buyCarLADA"):
         selectedCar = callback.data[6:]
         selectCarPrice = 0
-        for i in CARS["LADA"]:
+        for i in CARS["ECONOM"]:
             for name, price in i.items():
                 if name == selectedCar:
                     selectCarPrice = price
