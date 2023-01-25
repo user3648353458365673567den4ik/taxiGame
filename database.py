@@ -7,7 +7,7 @@ def dbInit():
     db = sqlite3.connect("database.db")
     cursor = db.cursor()
 
-    cursor.execute("CREATE TABLE IF NOT EXISTS users(userId INT, username TEXT, money INT)")
+    cursor.execute("CREATE TABLE IF NOT EXISTS users(userId INT, username TEXT, money INT, currentCar TEXT)")
     db.commit()
 
 def isInDb(userId):
@@ -20,7 +20,7 @@ def isInDb(userId):
 def createUser(userId, username):
     print(isInDb(userId))
     if not isInDb(userId):
-        cursor.execute("INSERT INTO users (userId, username, money) VALUES(?, ?, ?)", (userId, username, 0))
+        cursor.execute("INSERT INTO users (userId, username, money, currentCar) VALUES(?, ?, ?, ?)", (userId, username, 0, "Жигули"))
         db.commit()
         print(f"Added {userId} {username}")
 

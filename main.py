@@ -43,7 +43,7 @@ async def command_stats(message: types.Message):
     if not await userExistsCheck(message, message.from_user.id):
         return
     data = getUserStats(message.from_user.id)
-    await message.answer(f"⭐️ СТАТИСТИКА ИГРОКА ⭐️\n\n🔸 Ваш ID: <b>{data[0]}</b> 🗝️\n🔸 Ваш никнейм: <b>{data[1]}</b> 📕\n🔸 Ваш баланс: <b>{data[2]}₽ 💰</b>", parse_mode="HTML")
+    await message.answer(f"⭐️ СТАТИСТИКА ИГРОКА ⭐️\n\n🔸 Ваш ID: <b>{data[0]}</b> 🗝️\n🔸 Ваш никнейм: <b>{data[1]}</b> 📕\n🔸 Ваш баланс: <b>{data[2]}₽ 💰</b>\n🔸 Ваша машина: <b>{data[3]} (50km/h) 🚖</b>", parse_mode="HTML")
 
 @dp.message_handler(commands=['shop'])
 async def command_shop(message: types.Message):
@@ -72,19 +72,22 @@ async def confirmRegisterCallback(callback: types.CallbackQuery):
 async def selectCarCallback(callback: types.CallbackQuery):
     if callback.data == "shopMarkSelectedEconom":
         await callback.message.answer("Вот все варианты автомобилей эконом класса на даный момент")
-        await selectCar(bot, callback.from_user)
+        await selectCar("econom", bot, callback.from_user)
         await callback.answer("Вы выбрали автомобили эконом класса")
+    elif callback.data == "shopMarkSelectedComfort":
+        await callback.message.answer("Вот все варианты автомобилей комфорт класса на даный момент")
+        await selectCar("comfort", bot, callback.from_user)
+        await callback.answer("Вы выбрали автомобили комфорт класса")
 
 @dp.callback_query_handler(Text(startswith="buyCar"))
 async def buyCarCallback(callback: types.CallbackQuery):
-    if callback.data.startswith("buyCarLADA"):
-        selectedCar = callback.data[6:]
-        selectCarPrice = 0
-        for i in CARS["ECONOM"]:
-            for name, price in i.items():
-                if name == selectedCar:
-                    selectCarPrice = price
-        await callback.message.answer(f"Вы выбрали автомобиль {selectedCar} за {selectCarPrice}₽")
+    for carClass in CARS.items():
+        for car in carClass[1]:
+            for name, params in car.items():
+                price = params[0]
+                if callback.data == f"buyCar{name}":
+                    await callback.message.answer(f"Вы выбрали автомобиль {name} за {price}")
+                    break
 
 
 if __name__ == "__main__":
