@@ -30,7 +30,7 @@ async def command_start(message: types.Message):
         await message.answer('Нажимая кнопку "Продолжить" вы соглашаетесь со следующими условиями:\n1. Вы будете внесены в базу данных бота с целью сохранения прогресса\n2. Вы обязуетесь выполнять правила игры',
             reply_markup=registerConfrmIk)
     else:
-        await message.answer(f"Здравствуйте, {getUserStats(message.from_user.id)[1]}! 👋\n📜 Чтобы узнать список команд на введите /help 📜")
+        await message.answer(f"Здравствуйте, {getUserStats(message.from_user.id)[1]}! 👋\n📜 Чтобы узнать список команд на введите <b>/help</b> 📜", parse_mode="HTML")
 
 @dp.message_handler(commands=['help'])
 async def command_help(message: types.Message):
@@ -96,7 +96,7 @@ async def buyCarCallback(callback: types.CallbackQuery):
                             await callback.message.answer(f"💸 ВЫ УСПЕШНО ПРЕОБРЕЛИ АВТОМОБИЛЬ 💸\n🔹 Название машины: <b>{name}</b>\n🔹 Цена покупки: <b>{price}₽</b>", parse_mode="HTML")
                             await callback.answer(f"Вы преобрели автомобиль {name}")
                         else:
-                            await callback.message.answer("Увы, у вас недостаточно средств для покупки этого авто...")
+                            await callback.message.answer(f"♦️ ОТКАЗАНО В ПОКУПКЕ ♦️\nПричина: <b>У вас недостаточно средств для покупки этого авто</b>\n♦️ На данный момент вам нехватает {price - int(getUserStats(callback.from_user.id)[2])}₽", parse_mode="HTML")
                             await callback.answer("Откаано в покупке")
                         break
 

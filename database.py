@@ -21,7 +21,7 @@ def isInDb(userId):
 
 def createUser(userId, username):
     if not isInDb(userId):
-        cursor.execute("INSERT INTO users (userId, username, money, currentCar) VALUES(?, ?, ?, ?)", (userId, username, 1000000, BASE_CAR[0]))
+        cursor.execute("INSERT INTO users (userId, username, money, currentCar) VALUES(?, ?, ?, ?)", (userId, username, 200000, BASE_CAR[0]))
         db.commit()
         print(f"Added {userId} {username}")
 
