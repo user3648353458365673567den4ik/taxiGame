@@ -1,2 +1,2 @@
 TOKEN = '5872269530:AAErJU5OMRh03MQPJbzABSwyte15C8AA5Rw'
-BASE_CAR = {"Жигули": 50}
+BASE_CAR = ["Жигули", 50]

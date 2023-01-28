@@ -30,7 +30,7 @@ async def command_start(message: types.Message):
         await message.answer('Нажимая кнопку "Продолжить" вы соглашаетесь со следующими условиями:\n1. Вы будете внесены в базу данных бота с целью сохранения прогресса\n2. Вы обязуетесь выполнять правила игры',
             reply_markup=registerConfrmIk)
     else:
-        await message.answer(f"Здравствуйте, {getUserStats(message.from_user.id)[1]}!")
+        await message.answer(f"Здравствуйте, {getUserStats(message.from_user.id)[1]}! 👋\n📜 Чтобы узнать список команд на введите /help 📜")
 
 @dp.message_handler(commands=['help'])
 async def command_help(message: types.Message):
@@ -43,7 +43,8 @@ async def command_stats(message: types.Message):
     if not await userExistsCheck(message, message.from_user.id):
         return
     data = getUserStats(message.from_user.id)
-    await message.answer(f"⭐️ СТАТИСТИКА ИГРОКА ⭐️\n\n🔸 Ваш ID: <b>{data[0]}</b> 🗝️\n🔸 Ваш никнейм: <b>{data[1]}</b> 📕\n🔸 Ваш баланс: <b>{data[2]}₽ 💰</b>\n🔸 Ваша машина: <b>{data[3]} (50km/h) 🚖</b>", parse_mode="HTML")
+    currentCarSpd = getCurrentCarSpeed(message.from_user.id)
+    await message.answer(f"⭐️ СТАТИСТИКА ИГРОКА ⭐️\n\n🔸 Ваш ID: <b>{data[0]}</b> 🗝️\n🔸 Ваш никнейм: <b>{data[1]}</b> 📕\n🔸 Ваш баланс: <b>{data[2]}₽ 💰</b>\n🔸 Ваша машина: <b>{data[3]} ({currentCarSpd} km/h) 🚖</b>", parse_mode="HTML")
 
 @dp.message_handler(commands=['shop'])
 async def command_shop(message: types.Message):
@@ -86,8 +87,18 @@ async def buyCarCallback(callback: types.CallbackQuery):
             for name, params in car.items():
                 price = params[0]
                 if callback.data == f"buyCar{name}":
-                    await callback.message.answer(f"Вы выбрали автомобиль {name} за {price}")
-                    break
+                    if getUserStats(callback.from_user.id)[3] == name or getCurrentCarSpeed(callback.from_user.id) > params[1]:
+                        await callback.message.answer("♦️ ОТКАЗАНО В ПОКУПКЕ ♦️\nПричина: <b>Вы не можете приобрести точно такое же авто или хуже</b>", parse_mode="HTML")
+                        await callback.answer("Отказано в покупке")
+                    else:
+                        if int(getUserStats(callback.from_user.id)[2]) >= price:
+                            payCar(callback.from_user.id, name)
+                            await callback.message.answer(f"💸 ВЫ УСПЕШНО ПРЕОБРЕЛИ АВТОМОБИЛЬ 💸\n🔹 Название машины: <b>{name}</b>\n🔹 Цена покупки: <b>{price}₽</b>", parse_mode="HTML")
+                            await callback.answer(f"Вы преобрели автомобиль {name}")
+                        else:
+                            await callback.message.answer("Увы, у вас недостаточно средств для покупки этого авто...")
+                            await callback.answer("Откаано в покупке")
+                        break
 
 
 if __name__ == "__main__":

@@ -8,7 +8,6 @@ shopMarkSeletIk = InlineKeyboardMarkup(inline_keyboard=[
 ])
 
 async def buyCarKeyboard(carName):
-    print(carName)
     return InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton("💸 Купить 💸", callback_data=f"buyCar{carName}")]
     ])
